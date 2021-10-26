@@ -1,0 +1,98 @@
+help
+help set
+set copy copiar
+get copy
+clear
+strlen copy
+getrange copy 0 2
+incr copy
+set one 1
+incr one
+get one
+exists ca
+exists copy
+set past colar
+setrange copy 2 colar 
+get copu
+get copy
+set twenty 20
+decr twenty
+decr twenty 12
+decr twenty twenty
+decrby twenty
+decrby twenty 10
+keys copy
+set special specialkey**
+keys *
+get one
+type twenty
+type past
+set two 2
+type two
+del past
+keys *
+get twenty
+rename twenty nine
+keys *
+expire two 2
+keys *
+ttl two
+expire nine 9
+ttl two
+ttl nine
+persist nine
+ttl nine
+set list one
+lpush list two
+lpush list one
+lpush list nine
+lpush newlist list
+rpush newlist two three
+keys *
+KEYS *
+LRANGE newlit 0 3
+LRANGE newlit 0 2
+LRANGE newlist 0 2
+lpop two
+lpop newlist two
+lpop newlist
+LRANGE newlist 0 2
+sadd newSet
+sadd newSet pencil
+sadd newSet rubber
+sadd newSet notebook
+smembers newSet
+sadd lunch
+sadd lunch eggs
+sadd lunch tuna
+sunion union lunch newSet
+sinter union lunch newSet
+sdiff union lunch newSet
+lrem union
+sadd union eggs
+lrem union count eggs
+lrem union 2 eggs
+
+lrem union 2 eggs
+lrem union 2 "eggs"
+lrem lunch  2 "eggs"
+llen union
+llen lunch
+keys *
+type union
+hset hashkey field2
+hset hashkey field2 valor1
+hget  field2
+hget hashkey field2
+hexists hashkey field2
+hexists hashkey 
+hgetall hashkey 
+zadd sortedSets 1 one 
+zadd sortedSets 2 two
+zadd sortedSets 3 three
+zcore sortedSets one
+zincrby sortedSets one
+zincrby sortedSets 2 two
+zrange sortedSets 0 4
+zrangebyscore sortedSets 0 4
+zrangebyscore sortedSets 0 3
