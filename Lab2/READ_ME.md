@@ -1,6 +1,5 @@
 # Lab2 - MongoDB
 
-Completed: No
 
 ## MongoDB
 
@@ -64,9 +63,9 @@ Se quisermos modificar temos de dar update.
 
 Depois de inserir, fazemos select com **db.nomeColecao.find.**
 
-**Nota**: se quiseremos uma pesquisa + complexa → select 
+**Nota**: se quisermos uma pesquisa + complexa → select 
 
-```jsx
+```
 find({zona onde pesquisamos elementos semelhantes, selecao, restricao},
 {onde especificamos o que queremos ver exemplo "nome:1,_id:0}
 
@@ -77,7 +76,7 @@ O id é o unico que não podemos por 0. Se quisermos que não apareça um certo 
 
 **Exemplos:**
 
-```jsx
+```
 > db.movies.find( { }, { "title": 1, "directors": 1, "year": 1, _id:0 } );
 { "title" : "Titanic", "year" : 1997, "directors" : [ "James Cameron" ] }
 { "title" : "The Dark Knight", "year" : 2008, "directors" : [ "Christopher Nolan" ] }
@@ -91,8 +90,8 @@ O id é o unico que não podemos por 0. Se quisermos que não apareça um certo 
 >
 ```
 
-```jsx
-j
+```
+
 db.cbd.find()
 { "_id" : ObjectId("617a9b40bfcf8afbcdc857c9"), "teste" : "mariana" }
 ```
@@ -101,11 +100,11 @@ db.cbd.find()
 
 **Links úteis:**
 
-[https://docs.mongodb.com/manual/introduction/](https://docs.mongodb.com/manual/introduction/)
+-> https://docs.mongodb.com/manual/introduction/
 
-[https://docs.mongodb.com/manual/reference/sql-comparison/](https://docs.mongodb.com/manual/reference/sql-comparison/)
+-> https://docs.mongodb.com/manual/reference/sql-comparison/
 
-[https://docs.mongodb.com/manual/](https://docs.mongodb.com/manual/)
+-> https://docs.mongodb.com/manual/](https://docs.mongodb.com/manual/
 
 ## Ex.2
 
@@ -115,7 +114,7 @@ Respostas na pasta do exercício.
 
 Nota: Para usar as funções
 
-```jsx
+```
 use tests; load("functions.js"); functions()
 ```
 
@@ -125,17 +124,17 @@ O MongoDB tem vários *drivers* para aceder de forma programática através de d
 
 **Links úteis:**
 
-[https://docs.mongodb.com/ecosystem/drivers](https://docs.mongodb.com/ecosystem/drivers)
+-> https://docs.mongodb.com/ecosystem/drivers
 
-[https://mongodb.github.io/mongo-java-driver/3.4/driver/getting-started/quick-start/](https://mongodb.github.io/mongo-java-driver/3.4/driver/getting-started/quick-start/)
+-> https://mongodb.github.io/mongo-java-driver/3.4/driver/getting-started/quick-start/
 
-[https://www.programcreek.com/java-api-examples/?api=com.mongodb.client.model.Sorts](https://www.programcreek.com/java-api-examples/?api=com.mongodb.client.model.Sorts)
+-> https://www.programcreek.com/java-api-examples/?api=com.mongodb.client.model.Sorts
 
 **Nota:** Tal como vimos na unidade curricular Base de Dados, os índices melhoram (e muito) o desempenho dos programas. 
 
 *Output do exercício b)*
 
-```jsx
+```
 --------------WITHOUT INDEXES--------------
 
 Searching all Japanese restaurants located in Queens...
@@ -146,3 +145,13 @@ Search Time without indexes: 4514249
 Searching all Japanese restaurants located in Queens...
 Search Time with indexes: 244017
 ```
+
+## Ex. 5 - Base de Dados com temática livre
+1º escolher uma Mongo DB e dar import para a BD
+
+```jsx
+mongoimport --db airbnb --collection airbnb --drop --file ./airbnb.json
+```
+
+c) Na pasta
+

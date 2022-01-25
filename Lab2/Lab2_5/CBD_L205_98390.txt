@@ -1,0 +1,22 @@
+1. Mostre o nome, o ID e a descrição de todos os alojamentos.
+db.airbnb.find( { }, { "_id": 1, "name": 1, "summary": 1} );
+Exemplo:
+{ "_id" : "10084023", "name" : "City center private room with bed", "summary" : "House is located 5mins walk from Sham Shui Po and Prince Edward MTR. The private room has a single bed and a big closet, with window. You can enjoy the living area, kitchen and bathroom.  Speaks great Eng, Mandarin & Cantonese.Lots of restaurant here" }
+
+2. Mostre as descrições do tipo de apartamento, quantas camas tem e o preço por noite.
+> db.airbnb.find( { }, { "_id": 1, "name": 1, "summary": 1, "property_type":1, "bed_type":1, "accommodates":1, "price":1} );
+{ "_id" : "10009999", "name" : "Horto flat with small garden", "summary" : "One bedroom + sofa-bed in quiet and bucolic neighbourhood right next to the Botanical Garden. Small garden, outside shower, well equipped kitchen and bathroom with shower and tub. Easy for transport with many restaurants and basic facilities in the area.", "property_type" : "Apartment", "bed_type" : "Real Bed", "accommodates" : 4, "price" : NumberDecimal("317.00") }
+{ "_id" : "10021707", "name" : "Private Room in Bushwick", "summary" : "Here exists a very cozy room for rent in a shared 4-bedroom apartment. It is located one block off of the JMZ at Myrtle Broadway.  The neighborhood is diverse and appeals to a variety of people.", "property_type" : "Apartment", "bed_type" : "Real Bed", "accommodates" : 1, "price" : NumberDecimal("40.00") }
+
+3. Mostre informações sobre o host.
+> db.airbnb.find( { }, {"_id": 1, "name":1, "host":1, "host_neighbourhood":1, "host_verifications":1}
+{ "_id" : "10082307", "name" : "Double Room en-suite (307)", "host" : { "host_id" : "51289938", "host_url" : "https://www.airbnb.com/users/show/51289938", "host_name" : "Ken", "host_location" : "Hong Kong", "host_about" : "Out-going and positive. Happy to talk to guests and exchange our difference in culture.", "host_response_time" : "within an hour", "host_thumbnail_url" : "https://a0.muscache.com/im/pictures/48ba1de1-bfea-446c-83ab-c21cb4272696.jpg?aki_policy=profile_small", "host_picture_url" : "https://a0.muscache.com/im/pictures/48ba1de1-bfea-446c-83ab-c21cb4272696.jpg?aki_policy=profile_x_medium", "host_neighbourhood" : "Jordan", "host_response_rate" : 90, "host_is_superhost" : false, "host_has_profile_pic" : true, "host_identity_verified" : false, "host_listings_count" : 6, "host_total_listings_count" : 6, "host_verifications" : [ "email", "phone", "google", "reviews" ] } }
+
+4. Mostre informações sobre a vizinhança.
+> db.airbnb.find( { }, {"_id": 1, "name":1, "host":1, "host_neighbourhood":1, "host_verifications":1}
+{ "_id" : "10084023", "name" : "City center private room with bed", "transit" : "Close to 3 different MTR Station, Sham shui Po and Shek Kei Mei 5 mins Walk, Prince edward 6 mins and lots of bus stations just downstairs to Hong Kong Island, Kowloon and New territory" }
+
+
+5. Mostre informações sobre o acesso aos alojamentos.
+> db.airbnb.find( { }, {"_id": 1, "name":1, "transit":1, "acess":1, "host_verifications":1}
+{ "_id" : "10092679", "name" : "Cozy house at Beyoğlu", "transit" : "Its very closed to bus stop and Balat, Taksim, Pierre Loti, Eminönü, Sultan Ahmet, Kadıköy" }
