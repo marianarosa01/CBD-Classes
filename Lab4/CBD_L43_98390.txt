@@ -1,0 +1,149 @@
+1. Liste a informação de cada utilizador.
+math (u:user) return u;
+Um exemplo:
+╒══════════════════════════════════════════════════════════════╕
+│"u"                                                           │
+╞══════════════════════════════════════════════════════════════╡
+│{"name":"Aaron Mulder","id":"aa0380"}                         │
+├──────────────────────────────────────────────────────────────┤
+│{"name":"Aaron Mulder","id":"ammulder"}                       │
+├──────────────────────────────────────────────────────────────┤
+│{"name":"Aaron T. Myers","id":"atm"}                          │
+├──────────────────────────────────────────────────────────────┤
+                             ...
+
+2. Liste o nome de cada utilizador.
+match (u:user) return u.name;
+
+╒═══════════════════════════════════╕
+│"u.name"                           │
+╞═══════════════════════════════════╡
+│"Aaron Mulder"                     │
+├───────────────────────────────────┤
+│"Aaron Mulder"                     │
+           ...
+│"Prasad Kashyap"                   │
+└───────────────────────────────────┘
+
+
+3. Liste a informação de cada projeto, no qual tenha participado pelo menos um utilizador.
+match (u:user)-[:ROLE]->(p:project) return u.name, p;
+
+╒═════════════════════════════════╤═════════════════════════════════════╕
+│"u.name"                         │"p"                                  │
+╞═════════════════════════════════╪═════════════════════════════════════╡
+│"Jan Bartel"                     │{"name":"Apache Geronimo"}           │
+├─────────────────────────────────┼─────────────────────────────────────┤
+│"Viet Nguyen"                    │{"name":"Apache Geronimo"}           │
+├─────────────────────────────────┼─────────────────────────────────────┤
+│"Paul McMahan"                   │{"name":"Apache Geronimo"}           │
+├─────────────────────────────────┼─────────────────────────────────────┤
+                                ...
+
+
+4. Liste os utilizadores e total de projetos em que cada um colabora.
+match (u:user)-[:ROLE]->(p:project) return u.name as Person, count(p) as projectNumbers;
+
+╒═══════════════════════════════════╤════════════════╕
+│"Person"                           │"projectNumbers"│
+╞═══════════════════════════════════╪════════════════╡
+│"Jan Bartel"                       │6               │
+├───────────────────────────────────┼────────────────┤
+│"Viet Nguyen"                      │3               │
+├───────────────────────────────────┼────────────────┤
+│"Paul McMahan"                     │4               │
+├───────────────────────────────────┼────────────────┤
+│"Kevan Miller"                     │8               │
+├───────────────────────────────────┼────────────────┤
+                         ...
+
+
+5. Liste os utilizadores e do total de projetos em que cada colabora ordenados por ordem decrescente do total.
+match (u:user)-[:ROLE]->(p:project) return u.name as Person, count(p) as projectNumber order by projectNumber desc;
+
+
+╒═══════════════════════════════════╤═══════════════╕
+│"Person"                           │"projectNumber"│
+╞═══════════════════════════════════╪═══════════════╡
+│"James Strachan"                   │23             │
+├───────────────────────────────────┼───────────────┤
+│"David Jencks"                     │21             │
+├───────────────────────────────────┼───────────────┤
+│"Guillaume Nodet"                  │20             │
+├───────────────────────────────────┼───────────────┤
+                        ...
+
+6. Liste projetos e total de membros em cada projeto.
+match (u:user)-[:ROLE]->(p:project) return  p.name, count(u) as projectMembers;
+
+╒══════════════════════════════╤════════════════╕
+│"p.name"                      │"projectMembers"│
+╞══════════════════════════════╪════════════════╡
+│"Apache Geronimo"             │111             │
+├──────────────────────────────┼────────────────┤
+│"Geronimo"                    │42              │
+├──────────────────────────────┼────────────────┤
+│"ActiveMQ"                    │82              │
+├──────────────────────────────┼────────────────┤
+│"Apache ActiveMQ"             │27              │
+├──────────────────────────────┼────────────────┤
+│"Apache Camel"                │58              │
+├──────────────────────────────┼────────────────┤
+                     ...
+
+
+
+7. Liste projetos e total de membros com a role "Committer" em cada projeto.
+match (u:user)-[:ROLE {job:"Committer"}]->(proj:project) return proj.name as projectName, count(*) as count;
+
+╒══════════════════════════════╤═══════╕
+│"projectName"                 │"count"│
+╞══════════════════════════════╪═══════╡
+│"Apache Geronimo"             │81     │
+├──────────────────────────────┼───────┤
+│"ActiveMQ"                    │27     │
+├──────────────────────────────┼───────┤
+│"Apache ActiveMQ"             │27     │
+├──────────────────────────────┼───────┤
+│"Apache Camel"                │32     │
+├──────────────────────────────┼───────┤
+│"Apache Hadoop"               │66     │
+                  ...
+
+
+
+8. Liste todos os utilizadores que participaram nos mesmo projetos do que o utilizador "atm" (id). Mostre os atributos: nome de "atm", nome utilizador 2, nome do projeto.
+match (u1:user {id:"atm"})-[:ROLE]->(p:project)
+match (u2:user)-[:ROLE]->(p) 
+return u1.name, u2.name, p.name;
+
+╒════════════════╤═════════════════════════╤═══════════════╕
+│"u1.name"       │"u2.name"                │"p.name"       │
+╞════════════════╪═════════════════════════╪═══════════════╡
+│"Aaron T. Myers"│"Zheng Shao"             │"Hadoop"       │
+├────────────────┼─────────────────────────┼───────────────┤
+│"Aaron T. Myers"│"Tsz Wo (Nicholas) Sze"  │"Hadoop"       │
+├────────────────┼─────────────────────────┼───────────────┤
+│"Aaron T. Myers"│"Lohit Vijayarenu"       │"Hadoop"       │
+├────────────────┼─────────────────────────┼───────────────┤
+│"Aaron T. Myers"│"Devaraj K"              │"Hadoop"       │
+├────────────────┼─────────────────────────┼───────────────┤
+                     ...
+
+9. Liste todos os utilizadores que participaram com a role "Committer" em projetos em que o utilizador "atm" (id1) participou com a role "PMC". 
+match (u1:user {id:"atm"})-[:ROLE {job:"PMC"}]->(proj:project)
+match (u2:user)-[:ROLE {job:"Committer"}]->(proj) 
+return u1.name, u2.name, proj.name;
+
+╒════════════════╤═════════════════════════╤═══════════════╕
+│"u1.name"       │"u2.name"                │"proj.name"    │
+╞════════════════╪═════════════════════════╪═══════════════╡
+│"Aaron T. Myers"│"Daryn Sharp"            │"Apache Hadoop"│
+├────────────────┼─────────────────────────┼───────────────┤
+│"Aaron T. Myers"│"Mukund Madhugiri"       │"Apache Hadoop"│
+├────────────────┼─────────────────────────┼───────────────┤
+│"Aaron T. Myers"│"Enis Soztutar"          │"Apache Hadoop"│
+├────────────────┼─────────────────────────┼───────────────┤
+│"Aaron T. Myers"│"Harsh J"                │"Apache Hadoop"│
+├────────────────┼─────────────────────────┼───────────────┤
+                          ...

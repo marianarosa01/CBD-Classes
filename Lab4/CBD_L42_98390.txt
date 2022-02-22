@@ -1,0 +1,361 @@
+#1. Encontre todos os atores que dirigiram um filme em que também atuaram e apresente o nome do ator e o título do filme.
+match (n:Person)-[:DIRECTED]->(m:Movie) match (n:Person)-[:ACTED_IN]->(m:Movie) return n.name;
+
+╒════════════════╕
+│"n.name"        │
+╞════════════════╡
+│"Tom Hanks"     │
+├────────────────┤
+│"Clint Eastwood"│
+├────────────────┤
+│"Danny DeVito"  │
+└────────────────┘
+
+#2. Para cada filme realizado depois de 2005, apresente os nomes de todos os atores que atuaram nesse filme.
+match(a:Person)-[:ACTED_IN]->(m:Movie) where  m.released>2005 return m.title;
+╒══════════════════════╤══════════════════════════════════════════════════════════════════════╕
+│"m.title"             │"collect(a.name)"                                                     │
+╞══════════════════════╪══════════════════════════════════════════════════════════════════════╡
+│"RescueDawn"          │["Zach Grenier","Steve Zahn","Christian Bale","Marshall Bell"]        │
+├──────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│"Cloud Atlas"         │["Tom Hanks","Jim Broadbent","Halle Berry","Hugo Weaving"]            │
+├──────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│"The Da Vinci Code"   │["Tom Hanks","Ian McKellen","Audrey Tautou","Paul Bettany"]           │
+├──────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│"V for Vendetta"      │["John Hurt","Stephen Rea","Natalie Portman","Hugo Weaving","Ben Miles│
+│                      │"]                                                                    │
+├──────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│"Speed Racer"         │["Emile Hirsch","Rain","Christina Ricci","Ben Miles","Susan Sarandon",│
+│                      │"John Goodman","Matthew Fox"]                                         │
+├──────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│"Ninja Assassin"      │["Rain","Ben Miles","Rick Yune","Naomie Harris"]                      │
+├──────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│"Frost/Nixon"         │["Sam Rockwell","Michael Sheen","Frank Langella","Oliver Platt","Kevin│
+│                      │ Bacon"]                                                              │
+├──────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│"Charlie Wilson's War"│["Julia Roberts","Tom Hanks","Philip Seymour Hoffman"]                │
+└──────────────────────┴──────────────────────────────────────────────────────────────────────┘
+
+#3 Encontre pares de nós com mais do que uma relação entre si.
+match (n)-[r]-(m) with n, m, count(r) as nRels where nRels>=2 return n,m;
+
+╒══════════════════════════════════════════════════════════════════════╤══════════════════════════════════════════════════════════════════════╕
+│"n"                                                                   │"m"                                                                   │
+╞══════════════════════════════════════════════════════════════════════╪══════════════════════════════════════════════════════════════════════╡
+│{"born":1967,"name":"Lilly Wachowski"}                                │{"tagline":"Speed has no limits","title":"Speed Racer","released":2008│
+│                                                                      │}                                                                     │
+├──────────────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│{"born":1967,"name":"Lilly Wachowski"}                                │{"tagline":"Freedom! Forever!","title":"V for Vendetta","released":200│
+│                                                                      │6}                                                                    │
+├──────────────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│{"born":1965,"name":"Lana Wachowski"}                                 │{"tagline":"Speed has no limits","title":"Speed Racer","released":2008│
+│                                                                      │}                                                                     │
+├──────────────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│{"born":1965,"name":"Lana Wachowski"}                                 │{"tagline":"Freedom! Forever!","title":"V for Vendetta","released":200│
+│                                                                      │6}                                                                    │
+                                                                      ...
+├────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│{"born":1949,"name":"Nancy Meyers"}                                   │{"title":"Something's Gotta Give","released":2003}                    │
+└──────────────────────────────────────────────────────────────────────┴──────────────────────────────────────────────────────────────────────┘
+
+
+#4 Encontre todos os pares de pessoas que fizeram revisões do mesmo filme. Apresente os seus nomes e título de cada filme. 
+ 
+match (p1:Person)-[:REVIEWED]->(m1:Movie) match (p2:Person)-[:REVIEWED]->(m2:Movie) where m1 = m2 and ID(p1)<ID(p2) return distinct (m1.title), (p1.name), (p2.name);
+
+
+╒═══════════════════╤══════════════════╤══════════════════╕
+│"(m1.title)"       │"(p1.name)"       │"(p2.name)"       │
+╞═══════════════════╪══════════════════╪══════════════════╡
+│"The Replacements" │"Angela Scope"    │"Jessica Thompson"│
+├───────────────────┼──────────────────┼──────────────────┤
+│"The Replacements" │"Jessica Thompson"│"James Thompson"  │
+├───────────────────┼──────────────────┼──────────────────┤
+│"The Replacements" │"Angela Scope"    │"James Thompson"  │
+├───────────────────┼──────────────────┼──────────────────┤
+│"The Da Vinci Code"│"Jessica Thompson"│"James Thompson"  │
+└───────────────────┴──────────────────┴──────────────────┘
+
+#5. Encontre todos os pares de atores que atuaram em vários filmes juntos.
+match (p1:Person)-[:ACTED_IN]->(m1:Movie) match (p2:Person)-[:ACTED_IN]->(m2:Movie) where m1 = m2 and p1<>p2 return m1.title, p1.name, p2.name;
+
+╒═════════════════════════════════╤════════════════════════╤════════════════════════╕
+│"m1.title"                       │"p1.name"               │"p2.name"               │
+╞═════════════════════════════════╪════════════════════════╪════════════════════════╡
+│"The Matrix"                     │"Hugo Weaving"          │"Emil Eifrem"           │
+├─────────────────────────────────┼────────────────────────┼────────────────────────┤
+│"The Matrix"                     │"Laurence Fishburne"    │"Emil Eifrem"           │
+├─────────────────────────────────┼────────────────────────┼────────────────────────┤
+│"The Matrix"                     │"Carrie-Anne Moss"      │"Emil Eifrem"           │
+├─────────────────────────────────┼────────────────────────┼────────────────────────┤
+│"The Matrix"                     │"Keanu Reeves"          │"Emil Eifrem"           │
+├─────────────────────────────────┼────────────────────────┼────────────────────────┤
+│"The Matrix"                     │"Emil Eifrem"           │"Hugo Weaving"          │
+├─────────────────────────────────┼────────────────────────┼────────────────────────┤
+│"The Matrix"                     │"Laurence Fishburne"    │"Hugo Weaving"          │
+├─────────────────────────────────┼────────────────────────┼────────────────────────┤
+│"The Matrix"                     │"Carrie-Anne Moss"      │"Hugo Weaving"          │
+├─────────────────────────────────┼────────────────────────┼────────────────────────┤
+│"The Matrix"                     │"Keanu Reeves"          │"Hugo Weaving"          │
+├─────────────────────────────────┼────────────────────────┼────────────────────────┤
+│"The Matrix"                     │"Emil Eifrem"           │"Laurence Fishburne"    │
+├─────────────────────────────────┼────────────────────────┼────────────────────────┤
+│"The Matrix"                     │"Hugo Weaving"          │"Laurence Fishburne"    │
+├─────────────────────────────────┼────────────────────────┼────────────────────────┤
+│"The Matrix"                     │"Carrie-Anne Moss"      │"Laurence Fishburne"    │
+└───────────────────────────────────────────────────────────────────────────────────┘
+
+#6. Determine a idade média do elenco do filme "Apollo 13" no ano do lançamento do filme
+match (a:Person)-[:ACTED_IN]->(m:Movie) where m.title="Apollo 13" return avg(m.released - a.born) as age_avg;
+
+╒═════════╕
+│"age_avg"│
+╞═════════╡
+│40.2     │
+└─────────┘
+
+#7. Encontre os 10 filmes com o elenco mais velho no momento do lançamento do filme. Apresente o filme e a idade média arredondada a 2 casas decimais, por ordem decrescente
+match (a)-[:ACTED_IN]->(m) return  m.title, round(avg(m.released - a.born) *100)/100 AS age_avg  order by age_avg desc limit 10
+
+╒════════════════════════╤═════════╕
+│"m.title"               │"avg_age"│
+╞════════════════════════╪═════════╡
+│"Unforgiven"            │62.0     │
+├────────────────────────┼─────────┤
+│"Cloud Atlas"           │54.25    │
+├────────────────────────┼─────────┤
+│"Something's Gotta Give"│54.0     │
+├────────────────────────┼─────────┤
+│"The Birdcage"          │50.33    │
+├────────────────────────┼─────────┤
+│"Frost/Nixon"           │49.4     │
+├────────────────────────┼─────────┤
+│"The Polar Express"     │48.0     │
+├────────────────────────┼─────────┤
+│"What Dreams May Come"  │48.0     │
+├────────────────────────┼─────────┤
+│"V for Vendetta"        │47.2     │
+├────────────────────────┼─────────┤
+│"RescueDawn"            │46.75    │
+├────────────────────────┼─────────┤
+│"Snow Falling on Cedars"│46.5     │
+└────────────────────────┴─────────┘
+
+#8 Apresente o subgrafo ACTED_IN do filme com o elenco mais novo, no momento do lançamento do filme
+match (a)-[:ACTED_IN]->(m) return  m.title, round(avg(m.released - a.born) *100)/100 AS age_avg  order by age_avg asc limit 1
+
+╒═════════════╤═════════╕
+│"m.title"    │"avg_age"│
+╞═════════════╪═════════╡
+│"Stand By Me"│20.14    │
+└─────────────┴─────────┘
+
+match (a:Person)-[:ACTED_IN]->(m:Movie) where m.title="Stand By Me" return a.name;
+
+╒═══════════════════╕
+│"a.name"           │
+╞═══════════════════╡
+│"Jerry O'Connell"  │
+├───────────────────┤
+│"River Phoenix"    │
+├───────────────────┤
+│"Marshall Bell"    │
+├───────────────────┤
+│"Wil Wheaton"      │
+├───────────────────┤
+│"Kiefer Sutherland"│
+├───────────────────┤
+│"John Cusack"      │
+├───────────────────┤
+│"Corey Feldman"    │
+└───────────────────┘
+
+#9 Qual é o caminho mais curto (usando qualquer tipo de relação) entre John Cusack e Demi Moore?
+
+match (p1:Person {name: 'John Cusack'} ), (p2:Person {name: 'Demi Moore'}), p = shortestPath((p1)-[*]-(p2)) return p;
+╒══════════════════════════════════════════════════════════════════════╕
+│"p"                                                                   │
+╞══════════════════════════════════════════════════════════════════════╡
+│[{"born":1966,"name":"John Cusack"},{"roles":["Denny Lachance"]},{"tag│
+│line":"For some, it's the last real taste of innocence, and the first │
+│real taste of life. But for everyone, it's the time that memories are │
+│made of.","title":"Stand By Me","released":1986},{"tagline":"For some,│
+│ it's the last real taste of innocence, and the first real taste of li│
+│fe. But for everyone, it's the time that memories are made of.","title│
+│":"Stand By Me","released":1986},{},{"born":1947,"name":"Rob Reiner"},│
+│{"born":1947,"name":"Rob Reiner"},{},{"tagline":"In the heart of the n│
+│ation's capital, in a courthouse of the U.S. government, one man will │
+│stop at nothing to keep his honor, and one will stop at nothing to fin│
+│d the truth.","title":"A Few Good Men","released":1992},{"tagline":"In│
+│ the heart of the nation's capital, in a courthouse of the U.S. govern│
+│ment, one man will stop at nothing to keep his honor, and one will sto│
+│p at nothing to find the truth.","title":"A Few Good Men","released":1│
+│992},{"roles":["Lt. Cdr. JoAnne Galloway"]},{"born":1962,"name":"Demi │
+│Moore"}]                                                              │
+└──────────────────────────────────────────────────────────────────────┘
+
+#10. Qual a dimensão caminho mais curto (usando qualquer tipo de relação) entre Keanu Reeves e Tom Cruise?
+match (p1:Person {name: 'Keanu Reeves'} ),
+      (p2:Person {name: 'Tom Cruise'}),
+      p = shortestPath((p1)-[*]-(p2))
+return length(p);
+╒═══════════╕
+│"length(p)"│
+╞═══════════╡
+│4          │
+└───────────┘
+#11. Quais são a dimensão do caminho mais curto entre pessoas com nome Jim e pessoas com nome Kevin?
+match (a:Person), (b:Person) where a.name starts with "Jim" and b.name starts with "Kevin" 
+match p=shortestPath((a)-[*]-(b)) return min(length(p));
+
+╒════════════════╕
+│"min(length(p))"│
+╞════════════════╡
+│4               │
+└────────────────┘
+
+#12. Que pessoas têm uma distância 2 para Jim Cash (a distância entre duas pessoas é o comprimento do caminho mais curto entre eles)?
+match (p1:Person {name:"Jim Cash"})-[*2]-(p2:Person) return p2;
+
+╒══════════════════════════════════════╕
+│"p2"                                  │
+╞══════════════════════════════════════╡
+│{"born":1959,"name":"Val Kilmer"}     │
+├──────────────────────────────────────┤
+│{"born":1944,"name":"Tony Scott"}     │
+├──────────────────────────────────────┤
+│{"born":1961,"name":"Meg Ryan"}       │
+├──────────────────────────────────────┤
+│{"born":1933,"name":"Tom Skerritt"}   │
+├──────────────────────────────────────┤
+│{"born":1957,"name":"Kelly McGillis"} │
+├──────────────────────────────────────┤
+│{"born":1962,"name":"Tom Cruise"}     │
+├──────────────────────────────────────┤
+│{"born":1962,"name":"Anthony Edwards"}│
+└──────────────────────────────────────┘
+
+#13. Qual é a maior distância de uma pessoa para Kevin Bacon?
+
+match (p1:Person {name:"Kevin Bacon"}), (p2:Person) where p1.name <> p2.name 
+match p = shortestPath( (p1)-[*]-(p2))  return max(length(p)); 
+╒════════════════╕
+│"max(length(p))"│
+╞════════════════╡
+│6               │
+└────────────────┘
+
+#14. Qual é a maior distância entre duas pessoas?
+match (p1:Person), (p2:Person) where p1.name <> p2.name
+match p = shortestPath( (p1)-[*]-(p2)) return max(length(p));
+
+╒════════════════╕
+│"max(length(p))"│
+╞════════════════╡
+│10              │
+└────────────────┘
+
+#15. Qual é a distribuição de distâncias em pares (isto é, para a distância 1, 2, 3, ..., quantos pares de pessoas têm essa distância um do outro)?
+match (p1:Person), (p2:Person) where p1<>p2 with shortestPath((p1)-[*]-(p2)) as path with length(path) as distancia return distancia, count(*) order by distancia;
+
+╒═══════════╤══════════╕
+│"distancia"│"count(*)"│
+╞═══════════╪══════════╡
+│1          │6         │
+├───────────┼──────────┤
+│2          │1276      │
+├───────────┼──────────┤
+│3          │114       │
+├───────────┼──────────┤
+│4          │6248      │
+├───────────┼──────────┤
+│5          │246       │
+├───────────┼──────────┤
+│6          │8026      │
+├───────────┼──────────┤
+│7          │22        │
+├───────────┼──────────┤
+│8          │1610      │
+├───────────┼──────────┤
+│10         │8         │
+
+#16. Indique as 10 pessoas com menor distância média em que o caminho entre elas são relações do tipo ACTED_IN
+match (p1:Person), (p2:Person) where p1.name<>p2.name with p1, 
+shortestPath((p1)-[:ACTED_IN*]-(p2)) as path with p1, length(path) as distance
+return p1.name as Actor, avg(distance) as avg_distance ORDER BY avg_distance limit 10;
+
+╒══════════════════╤══════════════════╕
+│"Actor"           │"avg_distance"    │
+╞══════════════════╪══════════════════╡
+│"Tom Hanks"       │3.7821782178217833│
+├──────────────────┼──────────────────┤
+│"Kevin Bacon"     │4.376237623762377 │
+├──────────────────┼──────────────────┤
+│"Cuba Gooding Jr."│4.514851485148515 │
+├──────────────────┼──────────────────┤
+│"Jack Nicholson"  │4.554455445544554 │
+├──────────────────┼──────────────────┤
+│"Bonnie Hunt"     │4.574257425742573 │
+├──────────────────┼──────────────────┤
+│"Meg Ryan"        │4.594059405940594 │
+├──────────────────┼──────────────────┤
+│"Greg Kinnear"    │4.653465346534655 │
+├──────────────────┼──────────────────┤
+│"Tom Cruise"      │4.6930693069306955│
+├──────────────────┼──────────────────┤
+│"Hugo Weaving"    │4.732673267326734 │
+├──────────────────┼──────────────────┤
+│"Helen Hunt"      │4.811881188118813 │
+└──────────────────┴──────────────────┘
+
+#17Qual é a maior distância entre dois filmes?
+match (m1:Movie), (m2:Movie) where m1.title <> m2.title match m = shortestPath( (m1)-[*]-(m2)) return max(length(m));
+╒════════════════╕
+│"max(length(m))"│
+╞════════════════╡
+│8               │
+└────────────────┘
+
+#18  Indique que produtores produziram certos filmes.
+match (n:Person)-[:DIRECTED]->(m:Movie) match (n:Person)-[:PRODUCED]->(m:Movie) return m.title,  n.name;
+
+╒════════════════════════╤═══════════════╕
+│"m.title"               │"n.name"       │
+╞════════════════════════╪═══════════════╡
+│"Jerry Maguire"         │"Cameron Crowe"│
+├────────────────────────┼───────────────┤
+│"When Harry Met Sally"  │"Rob Reiner"   │
+├────────────────────────┼───────────────┤
+│"Something's Gotta Give"│"Nancy Meyers" │
+└────────────────────────┴───────────────┘
+
+
+#19 Encontre os 5 filmes com o elenco mais novo no momento do lançamento do filme. Apresente o filme e a idade média arredondada a 2 casas decimais, por ordem crescente.
+match (a)-[:ACTED_IN]->(m) return  m.title, round(avg(m.released - a.born) *100)/100 AS age_avg  order by age_avg limit 5;
+
+╒════════════════════════╤═════════╕
+│"m.title"               │"age_avg"│
+╞════════════════════════╪═════════╡
+│"Stand By Me"           │20.14    │
+├────────────────────────┼─────────┤
+│"That Thing You Do"     │26.67    │
+├────────────────────────┼─────────┤
+│"Jerry Maguire"         │29.67    │
+├────────────────────────┼─────────┤
+│"Top Gun"               │30.33    │
+├────────────────────────┼─────────┤
+│"Joe Versus the Volcano"│32.33    │
+└────────────────────────┴─────────┘
+
+
+
+#20  Qual é a maior distância entre um filme o filme "The Da Vinci Code"?
+
+match (m1:Movie {title:"The Da Vinci Code"}), (m2:Movie) where m1.title <> m2.title 
+match p = shortestPath( (m1)-[*]-(m2))  return max(length(p)); 
+
+╒════════════════╕
+│"max(length(p))"│
+╞════════════════╡
+│6               │
+└────────────────┘
